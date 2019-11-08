@@ -7,7 +7,7 @@ IPIP.net officially supported IP database ipdb format parsing library
 
 # Installing
 <code>
-    go get github.com/ipipdotnet/ipdb-go
+    go get github.com/popozhu/ipdb-go
 </code>
 
 # Code Example
@@ -18,32 +18,37 @@ IPIP.net officially supported IP database ipdb format parsing library
 package main
 
 import (
-	"github.com/ipipdotnet/ipdb-go"
-	"fmt"
-	"log"
+    "flag"
+    "fmt"
+    "log"
+    "os"
+    
+    ipdb "github.com/popozhu/ipdb-go"
 )
 
-func main() {
-	db, err := ipdb.NewCity("/path/to/city.ipv4.ipdb")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	db.Reload("/path/to/city.ipv4.ipdb") // 更新 ipdb 文件后可调用 Reload 方法重新加载内容
-
-	fmt.Println(db.IsIPv4()) // check database support ip type
-	fmt.Println(db.IsIPv6()) // check database support ip type
-	fmt.Println(db.BuildTime()) // database build time
-	fmt.Println(db.Languages()) // database support language
-	fmt.Println(db.Fields()) // database support fields
-
-	fmt.Println(db.FindInfo("2001:250:200::", "CN")) // return CityInfo
-	fmt.Println(db.Find("1.1.1.1", "CN")) // return []string
-	fmt.Println(db.FindMap("118.28.8.8", "CN")) // return map[string]string
-	fmt.Println(db.FindInfo("127.0.0.1", "CN")) // return CityInfo
-
-	fmt.Println()
+func usage() {
+    fmt.Fprintf(os.Stderr, "usage: \n\t%s [17monipdb_v6_vipday2.ipdb]\n\n", os.Args[0])
+    flag.PrintDefaults()
+    os.Exit(2)
 }
+
+func main() {
+    if len(os.Args) == 1 {
+            usage()
+    }
+
+    ipdb_file := os.Args[1]
+
+    db, err := ipdb.NewCity(ipdb_file)
+    if err != nil {
+            log.Fatal(err)
+    }
+
+    dumper := ipdb.NewDumper(db)
+    dumper.DumpNodes("CN")
+    return
+}
+
 </code>
 </pre>
 ## 地级市精度库数据字段说明
