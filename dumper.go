@@ -19,7 +19,6 @@ type Dumper struct {
 
 	start net.IP
 	end   net.IP
-	inode int
 
 	language string
 }
@@ -97,17 +96,11 @@ func (dumper *Dumper) dumpnode(bits, index, inode int) {
 		SetBit(end, i)
 	}
 
-	if dumper.inode == inode {
-		dumper.end = end
-		return
-	}
-
 	//fmt.Fprintf(os.Stdout, "bits: %d --> dump cidr: [%s - %s], inode: %d\n", bits, dumper.start, end, inode)
 
 	arr, _ := dumper.get_ip_info_by_inode(inode, dumper.language)
 	fmt.Fprintf(os.Stdout, "%s\t%s\t%s\n", dumper.start, end, strings.Join(arr, "\t"))
 
-	dumper.inode = inode
 	dumper.start = Inc(end)
 }
 
@@ -160,7 +153,6 @@ func (dumper *Dumper) DumpNodes(language string) {
 	dumper.language = language
 	dumper.start = net.IPv6loopback
 	dumper.end = make([]byte, net.IPv6len)
-	dumper.inode = 0
 	dumper.preOrder(0, 0)
 
 	return
