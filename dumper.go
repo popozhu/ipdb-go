@@ -17,8 +17,8 @@ type Dumper struct {
 	reader *reader
 	nodes  []node_t
 
-	start net.IP
-	end   net.IP
+	start net.IP // 当前ip段的开始ip
+	end   net.IP // 当前ip段的结尾ip
 
 	language string
 }
