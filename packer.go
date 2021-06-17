@@ -54,6 +54,8 @@ func NewPacker(is_ipv6 bool) *Packer {
 		debug: false,
 	}
 
+	p.getOffset([]string{"inited isp", "inited zone"})
+
 	return p
 }
 
@@ -169,7 +171,10 @@ func (p *Packer) getNode(cidr string) (int, int) {
 			p.nodes = append(p.nodes, [2]int{-1, -1})
 			p.nodes[idx][bit] = len(p.nodes) - 1
 		}
-		//fmt.Printf("\tbit %d, val:%d, current idx %d, node: %+v\n", i, bit, idx, p.nodes[idx])
+
+		if p.debug {
+			fmt.Printf("\tcidr: %s, bit %d, val:%d, current idx %d, node: %+v\n", cidr, i, bit, idx, p.nodes[idx])
+		}
 
 		idx = p.nodes[idx][bit]
 	}
