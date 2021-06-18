@@ -1,1 +1,3 @@
-module github.com/ipipdotnet/ipdb-go
+module github.com/popozhu/ipdb-go
+
+go 1.16
